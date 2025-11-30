@@ -6,8 +6,8 @@ local function interp(s, tab)
   return (s:gsub('($%b{})', function(w) return tab[w:sub(3, -2)] or w end))
 end
 
-function M.make_request(text)
-    local generate = interp("curl http://localhost:11434/api/generate -d '{\"model\": \"tabcomp\", \"prompt\": \"${text}\", \"stream\": false}'", { text = text})
+function M.make_request(lang, snippet)
+    local generate = interp("curl http://localhost:11434/api/generate -d '{\"model\": \"tab\", \"prompt\": \"LANGAUGE: ${lang} CODE: ${snippet}\", \"stream\": false}'", { lang = lang, snippet = snippet })
     local handle = io.popen(generate, "r")
     local output = nil
     if handle then
@@ -23,7 +23,7 @@ function M.make_request(text)
         end
     end
 
-    return output and output.response or nil
+    return output.response or nil
 end
 
 return M
