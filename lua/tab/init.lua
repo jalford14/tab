@@ -29,9 +29,7 @@ end
 vim.keymap.set("n", "<Leader>c", function()
     local cursor_line = vim.fn.line('.')
     local cursor_col = vim.fn.col('.')
-
     local lines = api.nvim_buf_get_lines(0, cursor_line - 1, cursor_line, false)
-
     local autocomplete = ollama.make_request(vim.bo.filetype, lines[1])
     local opts = {
         end_line = 1,
