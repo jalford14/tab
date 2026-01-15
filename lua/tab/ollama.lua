@@ -7,7 +7,7 @@ local function interp(s, tab)
 end
 
 function M.make_request(lang, snippet)
-    local generate = interp("curl http://localhost:11434/api/generate -d '{\"model\": \"tab\", \"prompt\": \"LANGAUGE: ${lang} CODE: ${snippet}\", \"stream\": false}'", { lang = lang, snippet = snippet })
+    local generate = interp("curl -s http://localhost:11434/api/generate -d '{\"model\": \"tab\", \"prompt\": \"LANGAUGE: ${lang} CODE: ${snippet}\", \"stream\": false}' 2>/dev/null", { lang = lang, snippet = snippet })
     local handle = io.popen(generate, "r")
     local output = nil
     if handle then
