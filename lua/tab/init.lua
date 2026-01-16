@@ -51,7 +51,6 @@ local function show_suggestion(bnr, line, col, suggestion_text, current_line_con
     current_suggestions[bnr] = {
         text = cleaned_text,  -- Store full text
         line = line,
-        col = col
     }
     
     -- Remove the already-typed portion from the beginning of the suggestion for display
@@ -91,7 +90,7 @@ local function show_suggestion(bnr, line, col, suggestion_text, current_line_con
             opts.virt_lines = remaining_lines
         end
         
-        local ok, err = pcall(api.nvim_buf_set_extmark, bnr, ns_id, line, col, opts)
+        local ok, err = pcall(api.nvim_buf_set_extmark, bnr, ns_id, line, 0, opts)
         if not ok then
             vim.notify("Error setting extmark: " .. tostring(err), vim.log.levels.ERROR)
         end
@@ -196,6 +195,14 @@ function M.setup()
         vim.fn.jobstop(pending_requests[bnr])
         pending_requests[bnr] = nil
       end
+    end,
+  })
+  
+  -- Shutdown server when leaving Neovim
+  api.nvim_create_autocmd("VimLeave", {
+    group = augroup,
+    callback = function()
+      ollama.shutdown_server()
     end,
   })
   
